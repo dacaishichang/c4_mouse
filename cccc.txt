@@ -1,0 +1,207 @@
+提的特征
+1，用户点鼠标的次数33
+2，用户点鼠标的时间间隔33
+3，用户点每次鼠标的平均时间
+4，用户点鼠标时间间隔的方差
+5，用户每次点鼠标的平均移动距离
+6，最后的鼠标坐标的距离
+7，x的平均移动距离（绝对值）
+8，y的平均移动距离（绝对值）
+
+
+train_test split分数据
+数据标准化Nomalizer
+GBDT进行分类
+
+
+
+预计做
+
+1，网格搜索调参(待)
+2，拟用xgboost.sklearn 的xgboostclassifier(待)
+3，用imblearn解决正负样本不均衡（待）
+4，所有距离都加上标准差（x,y，x+y）3--------2
+5，shuffle数据一下
+6，增加速度的特征（每次平均速度，x速度，y速度，方差）6 ---------2
+7，增加总移动平均角度（tan三角函数）特征（方差，均值）2（注意tan90不存在）--------2
+8，增加方向向量特征（分x和y）（cosp,sinp）分开写2-------------------2
+9，增加位置特征（x，y，平均，方差）2---------2
+10，增加最终目标的特征（x，y，x/t,y/t） 4
+11，增加点鼠标的频率，即number/(time_end-time_begin)1---------2
+12,待定特征（鼠标左移次数、右移次数，上移次数，下移次数）4（待）
+
+
+
+13，x的最值（大，小）y的最值（大小）x的range(max-min),y的range(max-min)，鼠标移动的面积（y(max-min)*x(max	-min)）
+14，最大间隔时间 ，最小间隔时间 ，最大时间戳 ，最小时间戳，总时间（time_end-time_begin）3333
+15，每个点与目标点的距离666 ，起始点与目标点的距离 dist_begin_goal ，结束点与目标点的距离 dist_end_goal ，起始点与结束点的距离 sum_dist,最大间隔距离 ,最小间隔距离
+16，起始x坐标 begin_x ,起始y坐标 begin_y ,终点x坐标 end_x ,终点y坐标 end_y 
+
+##############
+轨迹坐标点 
+起始x坐标 begin_x 
+起始y坐标 begin_y 
+终点x坐标 end_x 
+终点y坐标 end_y 
+轨迹的x坐标 
+最大x坐标 max_x 
+最小x坐标 min_x 
+x的移动距离，最大x坐标 - 最小x坐标 x_move_dist 
+轨迹的y坐标 
+最大y坐标 max_y 
+最小y坐标 min_y 
+y的移动距离，最大y坐标 - 最小y坐标 y_move_dist 
+移动区域面积 area_move
+
+间隔距离 
+最大间隔距离 
+最小间隔距离 
+平均每两点间隔距离 interval_dist_mean
+
+x间隔距离 
+轨迹是否掉头返回 is_return 当间隔出现负数 
+首次出现点 x y 
+时间点 
+速度 
+加速度 
+最大x坐标间隔 max_interval_x 
+最小x坐标间隔 min_interval_x 
+平均x间隔距离
+
+y间隔距离 
+当y间隔大于30时认为抖动幅度大 is_shake ???范围过大 
+最大y坐标间隔 max_interval_y 
+最小y坐标间隔 min_interval_y 
+#平均y间隔距离
+
+每个点与目标点的距离 
+起始点与目标点的距离 dist_begin_goal 
+结束点与目标点的距离 dist_end_goal 
+起始点与结束点的距离 sum_dist
+
+每条轨迹的总时间 sum_time 
+每个点的时间戳 
+最大时间戳 
+最小时间戳
+
+间隔时间 
+最大间隔时间 
+最小间隔时间 
+平均每两点间隔时间 interval_time_mean
+
+总速率 sum_rate 
+两点间隔速度 
+平均间隔速率 interval_rate_mean 
+最大间隔速率 max_rate 
+最小间隔速率 min_rate
+####################
+
+
+
+重写代码
+
+1，注意坐标的位置为（0，0）为中央点，有负坐标
+2，K折分数据(热启动warm_start!!!!!!)，xgboost，网格搜索，
+
+		'counts',11111111111111111-（1）
+		'ti_max', 
+		'ti_min',
+		'time_ra_max',
+		'time_ra_max_ind',111111111111
+       'time_ra_median',
+	   'time_ra_skew',
+	   'time_ra_min',
+	   'time_ra_min_ind',1111111111111
+       'time_chuo_max',
+	   'time_chuo_min',
+	   'timemax_min', 
+	   'time_mean',
+       'time_std', 
+	   'dist_xmax', 
+	   'dist_xmax_ind',111111111111111
+	   'dist_xmax_med',
+       'dist_xmax_skew',
+	   'dist_ymax',
+	   'dist_ymax_ind',1111111111111111
+	   'dist_ymax_med',
+       'x_mean',
+	   'y_mean', 
+	   'x_cha_max',
+	   'x_cha_max_ind',11111111111111111
+	   'x_cha_max_med',
+       'x_cha_skew', 
+	   'x_cha_min',
+	   'x_cha_min_ind', 1111111111111111
+	   'y_cha_max',
+       'y_cha_max_ind',1111111111111
+	   'y_cha_max_med',
+	   'y_cha_skew',
+	   'y_cha_min',
+       'y_cha_min_ind',1111111111111
+	   'x_cha_mean',
+	   'y_cha_mean',
+	   'x_range', 
+	   'y_range',
+       'mianji', 
+	   'jvli', 
+	   'juli_max',
+	   'total_juli',
+	   'juli_max_ind',111111111111
+	   'juli_med',
+       'juli_skew',
+	   'total_x',
+	   'total_y',
+	   'x_v_mean', 
+	   'x_v_std',
+	   'x_v_max',
+       'x_v_min',
+	   'x_v_idmax',
+	   'x_v_idmin',
+	   'y_v_mean', 
+	   'y_v_std', 
+	   'y_v_max',
+       'y_v_min', 
+	   'y_v_idmax',1111111111111
+	   'y_v_idmin',1111111111111
+	   'total_v', 
+	   'hz_right',
+	   'hz_left',
+       'hz_stop_x',
+	   'hz_up', 
+	   'hz_down',
+	   'hz_stop_y',
+	   'dianpin',
+	   'targ_x',
+       'targ_y',
+	   'x_start', 
+	   'y_start',
+	   'dist_en_tar_x',
+	   'isback'
+ 
+ x 7，y,13 ,t 3(very important)
+ 对于time相差0的增大时间间隔为原来的2倍并将0替换成1 
+ 
+ 引入多项式特征生成
+ 
+ 
+
+d1.count() #非空元素计算
+d1.min() #最小值
+d1.max() #最大值
+d1.idxmin() #最小值的位置，类似于R中的which.min函数-----
+d1.idxmax() #最大值的位置，类似于R中的which.max函数-----
+d1.quantile(0.1) #10%分位数
+d1.sum() #求和
+d1.mean() #均值
+d1.median() #中位数-----
+d1.mode() #众数
+d1.var() #方差
+d1.std() #标准差
+d1.mad() #平均绝对偏差-----
+d1.skew() #偏度-----
+d1.kurt() #峰度-----
+
+
+
+
+
